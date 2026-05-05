@@ -1,0 +1,1860 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Motril Hoy — Información Local</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sand: #F5F0E8;
+    --sand-dark: #E8E0D0;
+    --ink: #1A1815;
+    --ink-mid: #3D3A34;
+    --ink-light: #7A7268;
+    --terra: #B85C38;
+    --terra-light: #D4764E;
+    --sea: #2B5F7E;
+    --sea-light: #4A8FAD;
+    --white: #FDFCFA;
+    --serif: 'Playfair Display', Georgia, serif;
+    --sans: 'IBM Plex Sans', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--sand);
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--ink);
+    color: var(--sand);
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 2px solid var(--terra);
+  }
+
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 2.5rem;
+    border-bottom: 1px solid rgba(245,240,232,0.12);
+  }
+
+  .logo {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .logo-title {
+    font-family: var(--serif);
+    font-size: 1.7rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--sand);
+    line-height: 1;
+  }
+
+  .logo-subtitle {
+    font-size: 0.62rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    font-weight: 300;
+  }
+
+  .header-meta {
+    text-align: right;
+    font-size: 0.72rem;
+    color: var(--ink-light);
+    font-weight: 300;
+  }
+
+  .header-meta strong {
+    display: block;
+    color: var(--sand-dark);
+    font-weight: 400;
+    font-size: 0.78rem;
+    margin-bottom: 1px;
+  }
+
+  /* ── SEARCH ── */
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .search-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--ink-light);
+    padding: 0.3rem;
+    display: flex;
+    align-items: center;
+    transition: color 0.2s;
+  }
+  .search-toggle:hover { color: var(--sand); }
+
+  .search-bar {
+    display: none;
+    background: var(--ink-mid);
+    padding: 0.7rem 2.5rem;
+    border-bottom: 1px solid rgba(245,240,232,0.1);
+  }
+  .search-bar.open { display: flex; align-items: center; gap: 0.8rem; }
+
+  .search-bar input {
+    flex: 1;
+    background: rgba(245,240,232,0.07);
+    border: 1px solid rgba(245,240,232,0.15);
+    border-radius: 2px;
+    color: var(--sand);
+    font-family: var(--sans);
+    font-size: 0.88rem;
+    font-weight: 300;
+    padding: 0.55rem 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-bar input::placeholder { color: rgba(245,240,232,0.35); }
+  .search-bar input:focus { border-color: var(--terra); }
+
+  .search-bar button {
+    background: var(--terra);
+    border: none;
+    color: var(--white);
+    font-family: var(--sans);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
+    padding: 0.55rem 1.2rem;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .search-bar button:hover { background: var(--terra-light); }
+
+  .search-results {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--ink);
+    border-top: 1px solid rgba(245,240,232,0.1);
+    z-index: 200;
+    max-height: 340px;
+    overflow-y: auto;
+  }
+  .search-results.open { display: block; }
+
+  .search-result-item {
+    padding: 0.9rem 2.5rem;
+    border-bottom: 1px solid rgba(245,240,232,0.07);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .search-result-item:hover { background: rgba(245,240,232,0.05); }
+
+  .sri-cat {
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--terra-light);
+    margin-bottom: 0.2rem;
+  }
+  .sri-title {
+    font-family: var(--serif);
+    font-size: 0.9rem;
+    color: var(--sand);
+    line-height: 1.3;
+  }
+  .sri-title mark {
+    background: rgba(184,92,56,0.35);
+    color: var(--terra-light);
+    border-radius: 1px;
+  }
+  .search-no-results {
+    padding: 1.5rem 2.5rem;
+    color: rgba(245,240,232,0.4);
+    font-size: 0.85rem;
+    font-weight: 300;
+  }
+
+  /* ── HAMBURGER ── */
+  .hamburger {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.3rem;
+    flex-direction: column;
+    gap: 5px;
+    align-items: center;
+    justify-content: center;
+  }
+  .hamburger span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--sand-dark);
+    border-radius: 1px;
+    transition: transform 0.3s, opacity 0.3s;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  nav {
+    display: flex;
+    gap: 0;
+    padding: 0 2.5rem;
+    overflow-x: auto;
+    transition: max-height 0.3s ease, opacity 0.3s;
+  }
+
+  nav a {
+    color: var(--sand-dark);
+    text-decoration: none;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 400;
+    padding: 0.7rem 1.1rem;
+    border-right: 1px solid rgba(245,240,232,0.08);
+    white-space: nowrap;
+    transition: color 0.2s, background 0.2s;
+  }
+
+  nav a:first-child { border-left: 1px solid rgba(245,240,232,0.08); }
+  nav a:hover { background: rgba(184,92,56,0.2); color: var(--terra-light); }
+  nav a.active { color: var(--terra); }
+
+  @media (max-width: 700px) {
+    .hamburger { display: flex; }
+    .header-meta { display: none; }
+    nav {
+      flex-direction: column;
+      max-height: 0;
+      overflow: hidden;
+      padding: 0;
+      opacity: 0;
+    }
+    nav.open {
+      max-height: 500px;
+      opacity: 1;
+      padding: 0.5rem 0;
+    }
+    nav a {
+      border-right: none;
+      border-left: none !important;
+      border-bottom: 1px solid rgba(245,240,232,0.06);
+      padding: 0.9rem 1.5rem;
+    }
+  }
+
+  /* ── TICKER ── */
+  .ticker {
+    background: var(--terra);
+    color: var(--white);
+    padding: 0.4rem 0;
+    overflow: hidden;
+  }
+
+  .ticker-inner {
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+
+  .ticker-label {
+    background: var(--ink);
+    color: var(--terra-light);
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 500;
+    padding: 0.4rem 1rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .ticker-content {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .ticker-scroll {
+    display: flex;
+    animation: scroll-left 32s linear infinite;
+    white-space: nowrap;
+  }
+
+  .ticker-scroll span {
+    font-size: 0.78rem;
+    font-weight: 300;
+    padding: 0 3rem;
+  }
+
+  .ticker-scroll span::before {
+    content: '◆';
+    margin-right: 0.8rem;
+    font-size: 0.5rem;
+    opacity: 0.7;
+  }
+
+  @keyframes scroll-left {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* ── HERO SECTION ── */
+  .hero {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 0;
+    min-height: 520px;
+    border-bottom: 1px solid var(--sand-dark);
+  }
+
+  .hero-main {
+    position: relative;
+    overflow: hidden;
+    background: var(--ink);
+  }
+
+  .hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.55;
+    display: block;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #0a3d52 0%, #1a1815 60%, #3D1A0A 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  /* Motril skyline SVG scene */
+  .city-scene {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 55%;
+    opacity: 0.18;
+  }
+
+  /* Water shimmer */
+  .hero-water {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 25%;
+    background: repeating-linear-gradient(
+      transparent 0px, transparent 3px, rgba(43,95,126,0.3) 3px, rgba(43,95,126,0.3) 4px
+    );
+    opacity: 0.5;
+  }
+
+  .hero-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 2.5rem 2.5rem 2.5rem;
+    background: linear-gradient(to top, rgba(26,24,21,0.95) 0%, rgba(26,24,21,0.6) 50%, transparent 100%);
+  }
+
+  .hero-category {
+    display: inline-block;
+    font-size: 0.64rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--terra-light);
+    font-weight: 500;
+    margin-bottom: 0.8rem;
+    border-left: 2px solid var(--terra);
+    padding-left: 0.6rem;
+  }
+
+  .hero-title {
+    font-family: var(--serif);
+    font-size: 2.1rem;
+    font-weight: 600;
+    color: var(--white);
+    line-height: 1.2;
+    margin-bottom: 0.8rem;
+    max-width: 600px;
+  }
+
+  .hero-excerpt {
+    font-size: 0.88rem;
+    color: rgba(245,240,232,0.7);
+    font-weight: 300;
+    max-width: 520px;
+    margin-bottom: 1.2rem;
+    line-height: 1.7;
+  }
+
+  .hero-byline {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.72rem;
+    color: rgba(245,240,232,0.5);
+  }
+
+  .hero-byline-name { color: rgba(245,240,232,0.8); font-weight: 400; }
+  .hero-byline-dot { width: 3px; height: 3px; background: var(--terra); border-radius: 50%; }
+
+  /* Hero sidebar */
+  .hero-sidebar {
+    background: var(--white);
+    border-left: 1px solid var(--sand-dark);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+  .sidebar-label {
+    padding: 1rem 1.5rem 0.8rem;
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    font-weight: 400;
+    border-bottom: 1px solid var(--sand-dark);
+  }
+
+  .sidebar-item {
+    padding: 1.1rem 1.5rem;
+    border-bottom: 1px solid var(--sand-dark);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .sidebar-item:hover { background: var(--sand); }
+
+  .sidebar-item-cat {
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--terra);
+    font-weight: 500;
+    margin-bottom: 0.35rem;
+  }
+
+  .sidebar-item-title {
+    font-family: var(--serif);
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--ink);
+    margin-bottom: 0.3rem;
+  }
+
+  .sidebar-item-time {
+    font-size: 0.68rem;
+    color: var(--ink-light);
+    font-weight: 300;
+  }
+
+  /* ── MAIN CONTENT ── */
+  .main-wrapper {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 2.5rem;
+  }
+
+  /* Section headers */
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 2.2rem 0 1.2rem;
+    border-bottom: 2px solid var(--ink);
+    margin-bottom: 1.8rem;
+  }
+
+  .section-title {
+    font-family: var(--serif);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: var(--sand-dark);
+    margin-bottom: 2px;
+  }
+
+  .section-more {
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--terra);
+    text-decoration: none;
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  /* ── CARD GRID ── */
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .article-card {
+    cursor: pointer;
+  }
+
+  .card-image {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: var(--ink);
+    border-radius: 2px;
+    margin-bottom: 0.9rem;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .card-image-inner {
+    width: 100%;
+    height: 100%;
+    transition: transform 0.4s ease;
+  }
+
+  .article-card:hover .card-image-inner { transform: scale(1.04); }
+
+  .card-category {
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 0.4rem;
+  }
+
+  .cat-local { color: var(--sea); }
+  .cat-economia { color: var(--terra); }
+  .cat-cultura { color: #7B5EA7; }
+  .cat-deporte { color: #2E7D4F; }
+  .cat-sociedad { color: #B8860B; }
+  .cat-mar { color: var(--sea-light); }
+
+  .card-title {
+    font-family: var(--serif);
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+    transition: color 0.15s;
+  }
+
+  .article-card:hover .card-title { color: var(--terra); }
+
+  .card-excerpt {
+    font-size: 0.82rem;
+    color: var(--ink-light);
+    font-weight: 300;
+    line-height: 1.6;
+    margin-bottom: 0.6rem;
+  }
+
+  .card-meta {
+    font-size: 0.68rem;
+    color: var(--ink-light);
+    display: flex;
+    gap: 0.6rem;
+    align-items: center;
+  }
+
+  .card-meta-dot { width: 2px; height: 2px; background: var(--ink-light); border-radius: 50%; }
+
+  /* ── OPINION ROW ── */
+  .opinion-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border: 1px solid var(--sand-dark);
+    margin-bottom: 3rem;
+    background: var(--white);
+  }
+
+  .opinion-card {
+    padding: 1.6rem;
+    border-right: 1px solid var(--sand-dark);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .opinion-card:last-child { border-right: none; }
+  .opinion-card:hover { background: var(--sand); }
+
+  .opinion-author {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+  }
+
+  .author-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--serif);
+    font-size: 1rem;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .av-a { background: #D4E8F5; color: var(--sea); }
+  .av-b { background: #F5E4D4; color: var(--terra); }
+  .av-c { background: #E8D4F5; color: #7B5EA7; }
+
+  .author-name {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  .author-role {
+    font-size: 0.72rem;
+    color: var(--ink-light);
+    font-weight: 300;
+  }
+
+  .opinion-title {
+    font-family: var(--serif);
+    font-size: 0.95rem;
+    font-weight: 600;
+    font-style: italic;
+    line-height: 1.4;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+  }
+
+  .opinion-preview {
+    font-size: 0.8rem;
+    color: var(--ink-light);
+    font-weight: 300;
+    line-height: 1.6;
+  }
+
+  /* ── MAR Y COSTA HIGHLIGHT ── */
+  .feature-banner {
+    background: var(--sea);
+    color: var(--white);
+    padding: 2.5rem;
+    margin-bottom: 3rem;
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 3rem;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .feature-banner::before {
+    content: '';
+    position: absolute;
+    right: -60px;
+    top: -60px;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.07);
+  }
+
+  .feature-banner::after {
+    content: '';
+    position: absolute;
+    right: 60px;
+    top: 60px;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .banner-tag {
+    font-size: 0.62rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .banner-tag::before {
+    content: '';
+    width: 20px;
+    height: 1px;
+    background: var(--terra-light);
+  }
+
+  .banner-title {
+    font-family: var(--serif);
+    font-size: 1.8rem;
+    font-weight: 600;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+  }
+
+  .banner-text {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.7);
+    font-weight: 300;
+    line-height: 1.7;
+  }
+
+  .banner-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  .stat-item {
+    border-left: 2px solid var(--terra-light);
+    padding-left: 1rem;
+  }
+
+  .stat-number {
+    font-family: var(--serif);
+    font-size: 1.8rem;
+    font-weight: 400;
+    color: var(--white);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.5);
+    font-weight: 300;
+    letter-spacing: 0.08em;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink);
+    color: var(--sand);
+    padding: 3rem 2.5rem 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .footer-grid {
+    max-width: 1320px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 3rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid rgba(245,240,232,0.1);
+  }
+
+  .footer-about {
+    font-size: 0.82rem;
+    color: rgba(245,240,232,0.5);
+    font-weight: 300;
+    line-height: 1.7;
+    margin-top: 0.8rem;
+  }
+
+  .footer-col-title {
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--terra);
+    font-weight: 500;
+    margin-bottom: 1rem;
+  }
+
+  .footer-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .footer-links a {
+    color: rgba(245,240,232,0.55);
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 300;
+    transition: color 0.15s;
+  }
+
+  .footer-links a:hover { color: var(--sand); }
+
+  .footer-bottom {
+    max-width: 1320px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1.5rem;
+    font-size: 0.72rem;
+    color: rgba(245,240,232,0.3);
+    font-weight: 300;
+  }
+
+  /* ── WEATHER BAR ── */
+  .weather-bar {
+    background: var(--white);
+    border-bottom: 1px solid var(--sand-dark);
+    padding: 0.6rem 2.5rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    font-size: 0.75rem;
+    color: var(--ink-light);
+  }
+
+  .weather-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .weather-icon {
+    font-size: 1rem;
+  }
+
+  .weather-temp {
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  .weather-sep {
+    width: 1px;
+    height: 14px;
+    background: var(--sand-dark);
+  }
+
+  /* ── ARTICLE MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(26,24,21,0.85);
+    z-index: 500;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 2rem 1rem;
+    overflow-y: auto;
+    backdrop-filter: blur(3px);
+  }
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--white);
+    max-width: 720px;
+    width: 100%;
+    border-radius: 2px;
+    position: relative;
+    animation: modal-in 0.25s ease;
+    margin: auto;
+  }
+
+  @keyframes modal-in {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .modal-header {
+    background: var(--ink);
+    padding: 2rem 2.5rem 1.8rem;
+    position: relative;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(245,240,232,0.1);
+    border: none;
+    color: var(--sand);
+    font-size: 1.2rem;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+    line-height: 1;
+  }
+  .modal-close:hover { background: rgba(245,240,232,0.2); }
+
+  .modal-cat {
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--terra-light);
+    font-weight: 500;
+    margin-bottom: 0.7rem;
+    border-left: 2px solid var(--terra);
+    padding-left: 0.6rem;
+  }
+
+  .modal-title {
+    font-family: var(--serif);
+    font-size: 1.7rem;
+    font-weight: 600;
+    color: var(--white);
+    line-height: 1.25;
+    margin-bottom: 1rem;
+  }
+
+  .modal-byline {
+    font-size: 0.75rem;
+    color: rgba(245,240,232,0.5);
+    display: flex;
+    gap: 0.6rem;
+    align-items: center;
+  }
+  .modal-byline strong { color: rgba(245,240,232,0.8); font-weight: 400; }
+
+  .modal-body {
+    padding: 2rem 2.5rem;
+  }
+
+  .modal-body p {
+    font-size: 0.95rem;
+    line-height: 1.85;
+    color: var(--ink-mid);
+    margin-bottom: 1.2rem;
+    font-weight: 300;
+  }
+
+  .modal-body p:first-child {
+    font-size: 1.05rem;
+    color: var(--ink);
+    font-weight: 400;
+  }
+
+  .modal-img {
+    width: 100%;
+    height: 200px;
+    margin-bottom: 1.5rem;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .modal-footer {
+    padding: 1rem 2.5rem 1.5rem;
+    border-top: 1px solid var(--sand-dark);
+    display: flex;
+    gap: 0.8rem;
+    align-items: center;
+  }
+
+  .share-btn {
+    background: none;
+    border: 1px solid var(--sand-dark);
+    border-radius: 2px;
+    font-family: var(--sans);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    padding: 0.45rem 0.9rem;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .share-btn:hover { border-color: var(--terra); color: var(--terra); }
+
+  .article-card { cursor: pointer; }
+
+  @media (max-width: 600px) {
+    .modal-title { font-size: 1.3rem; }
+    .modal-header, .modal-body, .modal-footer { padding-left: 1.2rem; padding-right: 1.2rem; }
+  }
+  .img-port {
+    background: linear-gradient(160deg, #0d3d52 0%, #1b6e8e 50%, #2d3a2e 100%);
+  }
+  .img-sugar {
+    background: linear-gradient(160deg, #3D2B0A 0%, #7B5230 50%, #B87840 100%);
+  }
+  .img-market {
+    background: linear-gradient(160deg, #1a2e1a 0%, #2E5E35 50%, #5A9060 100%);
+  }
+  .img-beach {
+    background: linear-gradient(160deg, #0a2a3d 0%, #1a5c80 50%, #9DBFD4 100%);
+  }
+  .img-feria {
+    background: linear-gradient(160deg, #3D0A1A 0%, #7B2040 50%, #C44070 100%);
+  }
+  .img-road {
+    background: linear-gradient(160deg, #1a1a1a 0%, #404040 50%, #888880 100%);
+  }
+  .img-fishing {
+    background: linear-gradient(160deg, #071520 0%, #0E3B5C 50%, #1E6A9A 100%);
+  }
+  .img-sugar2 {
+    background: linear-gradient(160deg, #1A1A0A 0%, #4A4020 50%, #8A7840 100%);
+  }
+
+  /* SVG scene elements */
+  .scene-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-sidebar { display: none; }
+    .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .feature-banner { grid-template-columns: 1fr; }
+    nav { padding: 0 1rem; }
+    .header-top, .main-wrapper, .weather-bar, footer { padding-left: 1rem; padding-right: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-top">
+    <div class="logo">
+      <span class="logo-title">Motril Hoy</span>
+      <span class="logo-subtitle">El diario de la Costa Tropical</span>
+    </div>
+    <div class="header-actions">
+      <div class="header-meta">
+        <strong>Martes, 6 de mayo de 2025</strong>
+        Motril · Costa Tropical · Granada
+      </div>
+      <button class="search-toggle" id="searchToggle" aria-label="Buscar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+      </button>
+      <button class="hamburger" id="hamburger" aria-label="Menú">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <div class="search-bar" id="searchBar">
+    <input type="text" id="searchInput" placeholder="Buscar en Motril Hoy…" autocomplete="off"/>
+    <button onclick="runSearch()">Buscar</button>
+  </div>
+  <div class="search-results" id="searchResults"></div>
+  <nav id="mainNav">
+    <a href="#" class="active">Portada</a>
+    <a href="#">Local</a>
+    <a href="#">Mar y Costa</a>
+    <a href="#">Economía</a>
+    <a href="#">Cultura</a>
+    <a href="#">Sociedad</a>
+    <a href="#">Deporte</a>
+    <a href="#">Opinión</a>
+    <a href="#">Agenda</a>
+  </nav>
+</header>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <div class="ticker-label">Última hora</div>
+    <div class="ticker-content">
+      <div class="ticker-scroll">
+        <span>El Ayuntamiento aprueba el plan de mejora del paseo marítimo</span>
+        <span>La Fábrica de Azúcar inicia su campaña con récord de producción</span>
+        <span>Motril CF se juega el ascenso este domingo en el Escribano Castilla</span>
+        <span>Temporada alta en el Puerto: 18% más de cruceros que en 2024</span>
+        <span>Nueva línea de autobús nocturno conectará el centro con la playa</span>
+        <span>El Ayuntamiento aprueba el plan de mejora del paseo marítimo</span>
+        <span>La Fábrica de Azúcar inicia su campaña con récord de producción</span>
+        <span>Motril CF se juega el ascenso este domingo en el Escribano Castilla</span>
+        <span>Temporada alta en el Puerto: 18% más de cruceros que en 2024</span>
+        <span>Nueva línea de autobús nocturno conectará el centro con la playa</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WEATHER BAR -->
+<div class="weather-bar">
+  <div class="weather-item">
+    <span class="weather-icon">☀️</span>
+    <span class="weather-temp">24 °C</span>
+    <span>Motril</span>
+  </div>
+  <div class="weather-sep"></div>
+  <div class="weather-item">
+    <span>Viento: 12 km/h SW</span>
+  </div>
+  <div class="weather-sep"></div>
+  <div class="weather-item">
+    <span>Mar: marejadilla · Temperatura agua: 19 °C</span>
+  </div>
+  <div class="weather-sep"></div>
+  <div class="weather-item">
+    <span>UV: Alto · Humedad: 65%</span>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-main">
+    <div class="hero-bg">
+      <!-- Motril city silhouette SVG -->
+      <svg class="scene-svg" viewBox="0 0 800 400" preserveAspectRatio="xMidYMax meet" xmlns="http://www.w3.org/2000/svg">
+        <!-- Sky gradient -->
+        <defs>
+          <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#071829"/>
+            <stop offset="100%" stop-color="#0d3d52"/>
+          </linearGradient>
+          <linearGradient id="seaGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#0E3B5C"/>
+            <stop offset="100%" stop-color="#071520"/>
+          </linearGradient>
+        </defs>
+        <!-- Mountains in background -->
+        <polygon points="0,280 80,180 160,220 240,140 320,200 400,120 480,180 560,200 640,160 720,190 800,170 800,320 0,320" fill="#0A2535" opacity="0.8"/>
+        <polygon points="0,300 60,250 140,270 200,230 280,260 340,210 420,250 500,240 580,260 660,240 720,255 800,240 800,340 0,340" fill="#071d2c" opacity="0.9"/>
+        <!-- City buildings - Motril silhouette -->
+        <!-- Church / Encarnación -->
+        <rect x="80" y="210" width="35" height="80" fill="#0d3040"/>
+        <polygon points="80,210 97.5,185 115,210" fill="#0d3040"/>
+        <rect x="93" y="178" width="9" height="30" fill="#0d3040"/>
+        <!-- Town hall area -->
+        <rect x="130" y="230" width="55" height="60" fill="#0a2535"/>
+        <rect x="140" y="215" width="35" height="18" fill="#0a2535"/>
+        <!-- Residential blocks -->
+        <rect x="200" y="245" width="25" height="45" fill="#071e2e"/>
+        <rect x="230" y="235" width="30" height="55" fill="#071e2e"/>
+        <rect x="265" y="250" width="22" height="40" fill="#071e2e"/>
+        <rect x="293" y="240" width="28" height="50" fill="#071e2e"/>
+        <!-- Port crane / industrial -->
+        <rect x="530" y="230" width="8" height="60" fill="#071e2e"/>
+        <rect x="520" y="230" width="30" height="6" fill="#071e2e"/>
+        <rect x="548" y="230" width="4" height="40" fill="#071e2e"/>
+        <!-- Port buildings -->
+        <rect x="490" y="255" width="40" height="35" fill="#071e2e"/>
+        <rect x="540" y="260" width="50" height="30" fill="#071e2e"/>
+        <rect x="595" y="252" width="60" height="38" fill="#071e2e"/>
+        <!-- Sugar factory chimney (iconic) -->
+        <rect x="450" y="200" width="14" height="90" fill="#0a2535"/>
+        <rect x="446" y="195" width="22" height="10" rx="2" fill="#0a2535"/>
+        <rect x="420" y="250" width="35" height="40" fill="#0a2535"/>
+        <!-- More residential -->
+        <rect x="350" y="240" width="20" height="50" fill="#071e2e"/>
+        <rect x="375" y="248" width="25" height="42" fill="#071e2e"/>
+        <rect x="405" y="242" width="18" height="48" fill="#071e2e"/>
+        <!-- Sea -->
+        <rect x="0" y="320" width="800" height="80" fill="#071520" opacity="0.9"/>
+        <!-- Water horizontal lines -->
+        <line x1="0" y1="330" x2="800" y2="330" stroke="#0E3B5C" stroke-width="1" opacity="0.5"/>
+        <line x1="0" y1="342" x2="800" y2="342" stroke="#0E3B5C" stroke-width="0.8" opacity="0.4"/>
+        <line x1="0" y1="354" x2="800" y2="354" stroke="#0E3B5C" stroke-width="1" opacity="0.3"/>
+        <!-- Moon reflection -->
+        <ellipse cx="600" cy="338" rx="40" ry="4" fill="#1E6A9A" opacity="0.3"/>
+        <!-- Moon -->
+        <circle cx="620" cy="60" r="18" fill="#F5E8D0" opacity="0.15"/>
+      </svg>
+    </div>
+    <div class="hero-content">
+      <span class="hero-category">Desarrollo Urbano</span>
+      <h1 class="hero-title">El puerto de Motril aprueba una inversión de 40 millones para modernizar sus instalaciones</h1>
+      <p class="hero-excerpt">La Autoridad Portuaria ha dado luz verde al mayor proyecto de transformación de la infraestructura en los últimos veinte años, que incluirá nuevas terminales y una zona de ocio junto al mar.</p>
+      <div class="hero-byline">
+        <span class="hero-byline-name">Redacción Motril Hoy</span>
+        <span class="hero-byline-dot"></span>
+        <span>Hace 2 horas</span>
+        <span class="hero-byline-dot"></span>
+        <span>6 min de lectura</span>
+      </div>
+    </div>
+  </div>
+  <aside class="hero-sidebar">
+    <div class="sidebar-label">Más noticias</div>
+
+    <div class="sidebar-item">
+      <div class="sidebar-item-cat">Cultura</div>
+      <div class="sidebar-item-title">El Museo Municipal reabre tras su rehabilitación con una nueva sala sobre la historia azucarera</div>
+      <div class="sidebar-item-time">Hace 3 horas</div>
+    </div>
+
+    <div class="sidebar-item">
+      <div class="sidebar-item-cat">Economía</div>
+      <div class="sidebar-item-title">La campaña de la caña de azúcar prevé superar las 300.000 toneladas esta temporada</div>
+      <div class="sidebar-item-time">Hace 4 horas</div>
+    </div>
+
+    <div class="sidebar-item">
+      <div class="sidebar-item-cat">Deporte</div>
+      <div class="sidebar-item-title">El Motril CF logra un empate en Granada que mantiene vivas sus opciones de ascenso</div>
+      <div class="sidebar-item-time">Ayer, 22:30</div>
+    </div>
+
+    <div class="sidebar-item">
+      <div class="sidebar-item-cat">Sociedad</div>
+      <div class="sidebar-item-title">La Feria de Motril 2025 tendrá un recinto ampliado y nuevas atracciones en el paseo</div>
+      <div class="sidebar-item-time">Ayer, 18:00</div>
+    </div>
+
+    <div class="sidebar-item">
+      <div class="sidebar-item-cat">Local</div>
+      <div class="sidebar-item-title">El Ayuntamiento abre el proceso participativo para el nuevo plan urbanístico del centro</div>
+      <div class="sidebar-item-time">Ayer, 15:45</div>
+    </div>
+
+    <div class="sidebar-item">
+      <div class="sidebar-item-cat">Mar y Costa</div>
+      <div class="sidebar-item-title">Los pescadores artesanales de Motril piden medidas ante la reducción de las capturas de sardina</div>
+      <div class="sidebar-item-time">Ayer, 12:00</div>
+    </div>
+  </aside>
+</section>
+
+<!-- MAIN CONTENT -->
+<div class="main-wrapper">
+
+  <!-- ACTUALIDAD LOCAL -->
+  <div class="section-header">
+    <h2 class="section-title">Actualidad Local</h2>
+    <div class="section-line"></div>
+    <a class="section-more">Ver todo →</a>
+  </div>
+
+  <div class="grid-3">
+    <article class="article-card">
+      <div class="card-image img-market" style="height:180px; border-radius:2px; margin-bottom:.9rem;">
+        <svg width="100%" height="100%" viewBox="0 0 400 180" xmlns="http://www.w3.org/2000/svg" style="opacity:.4">
+          <rect x="30" y="80" width="60" height="100" fill="#2E5E35"/>
+          <rect x="95" y="65" width="80" height="115" fill="#1a3e20"/>
+          <rect x="180" y="75" width="50" height="105" fill="#2E5E35"/>
+          <polygon points="30,80 60,50 90,80" fill="#1a3e20"/>
+          <polygon points="95,65 135,35 175,65" fill="#0f2a14"/>
+          <polygon points="180,75 205,52 230,75" fill="#1a3e20"/>
+          <rect x="240" y="90" width="40" height="90" fill="#2E5E35"/>
+          <rect x="285" y="70" width="55" height="110" fill="#1a3e20"/>
+          <rect x="345" y="85" width="45" height="95" fill="#2E5E35"/>
+        </svg>
+      </div>
+      <div class="card-category cat-local">Local</div>
+      <h3 class="card-title">El mercado municipal inicia obras de climatización que modernizarán sus instalaciones</h3>
+      <p class="card-excerpt">Las reformas, presupuestadas en 1,2 millones de euros, incluirán también mejoras en la accesibilidad y una nueva distribución de puestos.</p>
+      <div class="card-meta">
+        <span>Ana Cortés</span>
+        <span class="card-meta-dot"></span>
+        <span>Hace 5 horas</span>
+      </div>
+    </article>
+
+    <article class="article-card">
+      <div class="card-image img-road" style="height:180px; border-radius:2px; margin-bottom:.9rem;">
+        <svg width="100%" height="100%" viewBox="0 0 400 180" xmlns="http://www.w3.org/2000/svg" style="opacity:.35">
+          <rect x="0" y="0" width="400" height="180" fill="#1a1a1a"/>
+          <polygon points="160,180 240,180 280,0 350,0" fill="#333"/>
+          <polygon points="160,180 240,180 120,0 50,0" fill="#333"/>
+          <line x1="200" y1="0" x2="200" y2="180" stroke="#888" stroke-width="2" stroke-dasharray="15,10"/>
+        </svg>
+      </div>
+      <div class="card-category cat-local">Infraestructuras</div>
+      <h3 class="card-title">La A-44 contará con nuevos carriles de acceso a Motril para reducir los atascos en verano</h3>
+      <p class="card-excerpt">La Junta de Andalucía ha confirmado que las obras comenzarán en otoño para estar listas antes de la próxima temporada estival.</p>
+      <div class="card-meta">
+        <span>Javier Montoro</span>
+        <span class="card-meta-dot"></span>
+        <span>Hace 6 horas</span>
+      </div>
+    </article>
+
+    <article class="article-card">
+      <div class="card-image img-feria" style="height:180px; border-radius:2px; margin-bottom:.9rem;">
+        <svg width="100%" height="100%" viewBox="0 0 400 180" xmlns="http://www.w3.org/2000/svg" style="opacity:.4">
+          <circle cx="100" cy="90" r="65" fill="none" stroke="#C44070" stroke-width="3"/>
+          <circle cx="100" cy="90" r="45" fill="none" stroke="#7B2040" stroke-width="2"/>
+          <circle cx="280" cy="90" r="55" fill="none" stroke="#C44070" stroke-width="3"/>
+          <rect x="50" y="130" width="100" height="50" fill="#3D0A1A"/>
+          <rect x="240" y="130" width="80" height="50" fill="#3D0A1A"/>
+        </svg>
+      </div>
+      <div class="card-category cat-cultura">Fiestas</div>
+      <h3 class="card-title">La Feria de Nuestra Señora de la Cabeza 2025 anuncia sus primeros artistas confirmados</h3>
+      <p class="card-excerpt">El cartel contará con actuaciones de flamenco, música pop andaluza y, por primera vez, una noche dedicada al Jazz en la Caseta Municipal.</p>
+      <div class="card-meta">
+        <span>Redacción</span>
+        <span class="card-meta-dot"></span>
+        <span>Ayer</span>
+      </div>
+    </article>
+  </div>
+
+  <!-- FEATURE BANNER: MAR Y COSTA -->
+  <div class="feature-banner">
+    <div>
+      <div class="banner-tag">Especial · Mar y Costa Tropical</div>
+      <h2 class="banner-title">La pesca artesanal en Motril: tradición frente al futuro del Mediterráneo</h2>
+      <p class="banner-text">Una investigación de Motril Hoy analiza la situación de las cofradías de pescadores locales, el impacto del cambio climático en las capturas y las nuevas regulaciones europeas que amenazan un modo de vida centenario en la Costa Tropical.</p>
+    </div>
+    <div class="banner-stats">
+      <div class="stat-item">
+        <div class="stat-number">340</div>
+        <div class="stat-label">pescadores activos en Motril</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">-18%</div>
+        <div class="stat-label">capturas en el último quinquenio</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">4</div>
+        <div class="stat-label">generaciones en cada familia</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ECONOMÍA Y EMPRESA -->
+  <div class="section-header">
+    <h2 class="section-title">Economía & Empresa</h2>
+    <div class="section-line"></div>
+    <a class="section-more">Ver todo →</a>
+  </div>
+
+  <div class="grid-4">
+    <article class="article-card">
+      <div class="card-image img-sugar" style="height:140px; border-radius:2px; margin-bottom:.8rem;">
+        <svg width="100%" height="100%" viewBox="0 0 300 140" xmlns="http://www.w3.org/2000/svg" style="opacity:.5">
+          <rect x="80" y="40" width="140" height="100" fill="#4A3010"/>
+          <rect x="120" y="20" width="15" height="120" fill="#3A2008"/>
+          <rect x="150" y="10" width="18" height="130" fill="#3A2008"/>
+          <rect x="60" y="70" width="50" height="70" fill="#3A2008"/>
+          <rect x="190" y="70" width="55" height="70" fill="#3A2008"/>
+        </svg>
+      </div>
+      <div class="card-category cat-economia">Agroindustria</div>
+      <h3 class="card-title">Azucarera de Motril bate su récord histórico de producción en la campaña 2024-25</h3>
+      <div class="card-meta">
+        <span>Economía</span>
+        <span class="card-meta-dot"></span>
+        <span>Ayer</span>
+      </div>
+    </article>
+
+    <article class="article-card">
+      <div class="card-image img-port" style="height:140px; border-radius:2px; margin-bottom:.8rem;">
+        <svg width="100%" height="100%" viewBox="0 0 300 140" xmlns="http://www.w3.org/2000/svg" style="opacity:.5">
+          <rect x="0" y="80" width="300" height="60" fill="#0d3040"/>
+          <rect x="30" y="50" width="8" height="90" fill="#0a2030"/>
+          <rect x="20" y="50" width="28" height="6" fill="#0a2030"/>
+          <rect x="120" y="60" width="60" height="80" fill="#0a2030"/>
+          <rect x="200" y="55" width="70" height="85" fill="#071828"/>
+          <rect x="50" y="70" width="60" height="70" fill="#0a2030"/>
+        </svg>
+      </div>
+      <div class="card-category cat-economia">Puerto</div>
+      <h3 class="card-title">El tráfico de mercancías en el puerto crece un 12% en el primer trimestre</h3>
+      <div class="card-meta">
+        <span>Puerto</span>
+        <span class="card-meta-dot"></span>
+        <span>Hace 2 días</span>
+      </div>
+    </article>
+
+    <article class="article-card">
+      <div class="card-image img-beach" style="height:140px; border-radius:2px; margin-bottom:.8rem;">
+        <svg width="100%" height="100%" viewBox="0 0 300 140" xmlns="http://www.w3.org/2000/svg" style="opacity:.5">
+          <rect x="0" y="70" width="300" height="70" fill="#0E3B5C"/>
+          <line x1="0" y1="82" x2="300" y2="82" stroke="#1E6A9A" stroke-width="1"/>
+          <line x1="0" y1="95" x2="300" y2="95" stroke="#1E6A9A" stroke-width="0.8"/>
+          <line x1="0" y1="108" x2="300" y2="108" stroke="#1E6A9A" stroke-width="1"/>
+          <circle cx="240" cy="30" r="22" fill="#F5E8D0" opacity="0.3"/>
+          <polygon points="0,70 40,55 80,65 120,50 160,60 200,48 240,58 280,50 300,55 300,70" fill="#1a5c80"/>
+        </svg>
+      </div>
+      <div class="card-category cat-economia">Turismo</div>
+      <h3 class="card-title">La ocupación hotelera en la Costa Tropical supera el 85% en Semana Santa</h3>
+      <div class="card-meta">
+        <span>Turismo</span>
+        <span class="card-meta-dot"></span>
+        <span>Hace 3 días</span>
+      </div>
+    </article>
+
+    <article class="article-card">
+      <div class="card-image img-sugar2" style="height:140px; border-radius:2px; margin-bottom:.8rem;">
+        <svg width="100%" height="100%" viewBox="0 0 300 140" xmlns="http://www.w3.org/2000/svg" style="opacity:.4">
+          <rect x="10" y="50" width="280" height="90" fill="#2a2010"/>
+          <rect x="40" y="30" width="30" height="110" fill="#1a1508"/>
+          <rect x="90" y="40" width="25" height="100" fill="#1a1508"/>
+          <rect x="160" y="35" width="28" height="105" fill="#1a1508"/>
+          <rect x="220" y="45" width="22" height="95" fill="#1a1508"/>
+        </svg>
+      </div>
+      <div class="card-category cat-economia">Agricultura</div>
+      <h3 class="card-title">Los productores de chirimoya piden mayor apoyo institucional ante la caída de precios</h3>
+      <div class="card-meta">
+        <span>Agricultura</span>
+        <span class="card-meta-dot"></span>
+        <span>Hace 4 días</span>
+      </div>
+    </article>
+  </div>
+
+  <!-- OPINIÓN -->
+  <div class="section-header">
+    <h2 class="section-title">Opinión</h2>
+    <div class="section-line"></div>
+    <a class="section-more">Ver todo →</a>
+  </div>
+
+  <div class="opinion-grid">
+    <div class="opinion-card">
+      <div class="opinion-author">
+        <div class="author-avatar av-a">MC</div>
+        <div>
+          <div class="author-name">María Cazorla</div>
+          <div class="author-role">Economista · Cámara de Comercio</div>
+        </div>
+      </div>
+      <div class="opinion-title">El puerto como palanca de transformación económica para la comarca</div>
+      <p class="opinion-preview">La modernización del puerto no es solo una obra de infraestructura. Es la oportunidad de redefinir el papel de Motril en el comercio mediterráneo del siglo XXI...</p>
+    </div>
+
+    <div class="opinion-card">
+      <div class="opinion-author">
+        <div class="author-avatar av-b">RV</div>
+        <div>
+          <div class="author-name">Rafael Vega</div>
+          <div class="author-role">Historiador · Universidad de Granada</div>
+        </div>
+      </div>
+      <div class="opinion-title">La memoria del azúcar: lo que no debe perderse en la modernización</div>
+      <p class="opinion-preview">Cuando se habla de progreso en Motril, se tiende a mirar hacia el futuro ignorando que nuestra identidad como ciudad se ha forjado en los campos de caña y en las chimeneas de la fábrica...</p>
+    </div>
+
+    <div class="opinion-card">
+      <div class="opinion-author">
+        <div class="author-avatar av-c">IP</div>
+        <div>
+          <div class="author-name">Isabel Parra</div>
+          <div class="author-role">Periodista · Corresponsal local</div>
+        </div>
+      </div>
+      <div class="opinion-title">Motril y el turismo: entre el crecimiento necesario y el horizonte amenazado</div>
+      <p class="opinion-preview">La Costa Tropical se encuentra en un punto de inflexión. El auge del turismo es una bendición económica, pero ¿a qué precio estamos dispuestos a pagar por él?</p>
+    </div>
+  </div>
+
+</div><!-- /main-wrapper -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="logo-title" style="font-family: 'Playfair Display', serif; font-size: 1.5rem; color: #F5F0E8;">Motril Hoy</div>
+      <p class="footer-about">El diario de referencia de la Costa Tropical de Granada. Información local rigurosa, independiente y comprometida con Motril y su comarca desde 2008.</p>
+    </div>
+    <div>
+      <div class="footer-col-title">Secciones</div>
+      <ul class="footer-links">
+        <li><a href="#">Local</a></li>
+        <li><a href="#">Mar y Costa</a></li>
+        <li><a href="#">Economía</a></li>
+        <li><a href="#">Cultura</a></li>
+        <li><a href="#">Deporte</a></li>
+        <li><a href="#">Opinión</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">El periódico</div>
+      <ul class="footer-links">
+        <li><a href="#">Quiénes somos</a></li>
+        <li><a href="#">Redacción</a></li>
+        <li><a href="#">Hemeroteca</a></li>
+        <li><a href="#">Publicidad</a></li>
+        <li><a href="#">Carta al director</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Contacto</div>
+      <ul class="footer-links">
+        <li><a href="#">redaccion@motrилhoy.es</a></li>
+        <li><a href="#">C/ Real, 12 · Motril</a></li>
+        <li><a href="#">958 600 000</a></li>
+        <li><a href="#">Newsletter</a></li>
+        <li><a href="#">RSS</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Motril Hoy · Todos los derechos reservados</span>
+    <span>Política de privacidad · Aviso legal · Cookies</span>
+  </div>
+</footer>
+
+<!-- ARTICLE MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <button class="modal-close" id="modalClose">✕</button>
+      <div class="modal-cat" id="modalCat"></div>
+      <h2 class="modal-title" id="modalTitle"></h2>
+      <div class="modal-byline">
+        <strong id="modalAuthor"></strong>
+        <span>·</span>
+        <span id="modalTime"></span>
+        <span>·</span>
+        <span id="modalRead"></span>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-img" id="modalImg"></div>
+      <div id="modalContent"></div>
+    </div>
+    <div class="modal-footer">
+      <span style="font-size:0.75rem;color:var(--ink-light);font-weight:300;flex:1">Compartir artículo:</span>
+      <button class="share-btn" onclick="shareArticle('twitter')">X / Twitter</button>
+      <button class="share-btn" onclick="shareArticle('whatsapp')">WhatsApp</button>
+      <button class="share-btn" onclick="shareArticle('copy')">Copiar enlace</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── ARTICLE DATA ──────────────────────────────────────────────
+const articles = [
+  {
+    id: 1,
+    cat: 'Desarrollo Urbano', catClass: 'cat-local',
+    title: 'El puerto de Motril aprueba una inversión de 40 millones para modernizar sus instalaciones',
+    author: 'Redacción Motril Hoy', time: 'Hace 2 horas', read: '6 min de lectura',
+    imgClass: 'img-port',
+    keywords: ['puerto','inversión','instalaciones','modernizar'],
+    body: [
+      'La Autoridad Portuaria del Estado ha dado su visto bueno definitivo al mayor plan de transformación que ha vivido el puerto de Motril en dos décadas. La inversión de 40 millones de euros se ejecutará en tres fases entre 2025 y 2028.',
+      'El proyecto contempla la construcción de una nueva terminal polivalente en el muelle de poniente, la ampliación de los accesos rodados para reducir el tráfico de camiones por el centro urbano, y la creación de una zona de ocio y restauración junto al paseo marítimo.',
+      'El presidente de la Autoridad Portuaria, Antonio Ruiz, destacó que la modernización "sitúa a Motril en el mapa del Mediterráneo occidental como puerto de referencia para el tráfico de corta distancia entre Europa y el norte de África".',
+      'Los colectivos empresariales de la comarca han acogido el anuncio con satisfacción. La Cámara de Comercio de Granada estima que el proyecto generará en torno a 600 empleos directos e indirectos durante la fase de construcción y más de 200 puestos estables una vez operativas las nuevas instalaciones.'
+    ]
+  },
+  {
+    id: 2,
+    cat: 'Cultura', catClass: 'cat-cultura',
+    title: 'El Museo Municipal reabre tras su rehabilitación con una nueva sala sobre la historia azucarera',
+    author: 'Lucía Fernández', time: 'Hace 3 horas', read: '4 min de lectura',
+    imgClass: 'img-sugar',
+    keywords: ['museo','rehabilitación','azúcar','historia','cultura'],
+    body: [
+      'El Museo Municipal de Motril ha reabierto sus puertas al público tras dieciocho meses de obras de rehabilitación que han supuesto una inversión de 800.000 euros financiada en parte por fondos europeos FEDER.',
+      'La joya de la reapertura es la nueva sala permanente dedicada a la historia de la industria azucarera en la comarca, que durante siglos definió la economía y la identidad de Motril. La exposición incluye maquinaria original de la antigua fábrica, documentos del siglo XIX y testimonios audiovisuales de antiguos trabajadores.',
+      'La concejala de Cultura, Marta Jiménez, subrayó que el objetivo es "convertir el museo en un espacio vivo donde los motrileños redescubran su propia historia y los visitantes entiendan por qué el azúcar de la Costa Tropical fue tan apreciado en toda Europa".',
+      'El acceso será gratuito los domingos y el primer sábado de cada mes. El resto de días la entrada tendrá un coste de 3 euros, con descuento para mayores de 65 años y estudiantes.'
+    ]
+  },
+  {
+    id: 3,
+    cat: 'Local', catClass: 'cat-local',
+    title: 'El mercado municipal inicia obras de climatización que modernizarán sus instalaciones',
+    author: 'Ana Cortés', time: 'Hace 5 horas', read: '3 min de lectura',
+    imgClass: 'img-market',
+    keywords: ['mercado','obras','climatización','accesibilidad'],
+    body: [
+      'El mercado municipal de abastos de Motril ha iniciado esta semana las obras de instalación de un sistema de climatización que transformará por completo las condiciones de trabajo de los comerciantes y la experiencia de compra de los clientes.',
+      'El presupuesto de la intervención asciende a 1,2 millones de euros e incluye, además de la climatización, mejoras en la accesibilidad con la instalación de rampas y ascensores, y una redistribución de los puestos que facilitará la circulación interior.',
+      'Las obras se ejecutarán por fases para mantener la actividad comercial durante los trabajos. Se prevé que la primera fase, correspondiente a la planta baja, esté concluida antes del verano.'
+    ]
+  },
+  {
+    id: 4,
+    cat: 'Infraestructuras', catClass: 'cat-local',
+    title: 'La A-44 contará con nuevos carriles de acceso a Motril para reducir los atascos en verano',
+    author: 'Javier Montoro', time: 'Hace 6 horas', read: '4 min de lectura',
+    imgClass: 'img-road',
+    keywords: ['A-44','autopista','acceso','tráfico','verano','carretera'],
+    body: [
+      'La Junta de Andalucía ha confirmado que las obras de ampliación de los carriles de acceso a Motril desde la autovía A-44 comenzarán el próximo otoño, con el objetivo de que estén finalizadas antes de la temporada alta de verano de 2026.',
+      'La intervención, valorada en 4,5 millones de euros, contempla la creación de carriles adicionales de deceleración y aceleración en los nudos de Camino de Torrenueva y Carchuna, los dos puntos donde se producen los mayores colapsos durante los meses de julio y agosto.',
+      'El delegado territorial de Fomento indicó que el proyecto también incluirá mejoras en la señalización y la iluminación de los accesos, que actualmente presentan déficits que aumentan el riesgo de accidentes en horas nocturnas.'
+    ]
+  },
+  {
+    id: 5,
+    cat: 'Fiestas', catClass: 'cat-cultura',
+    title: 'La Feria de Nuestra Señora de la Cabeza 2025 anuncia sus primeros artistas confirmados',
+    author: 'Redacción', time: 'Ayer', read: '3 min de lectura',
+    imgClass: 'img-feria',
+    keywords: ['feria','cabeza','artistas','flamenco','jazz','música'],
+    body: [
+      'La Feria de Nuestra Señora de la Cabeza de Motril, que se celebrará del 14 al 20 de agosto, ha anunciado sus primeros artistas confirmados para el cartel de este año, que promete ser el más variado de su historia reciente.',
+      'El programa incluirá actuaciones de flamenco con figuras consagradas, música pop andaluza con artistas emergentes de la provincia de Granada, y por primera vez en la historia de la feria, una noche completa dedicada al jazz en la Caseta Municipal.',
+      'El concejal de Festejos, Rafael Herrera, adelantó que se prevé la actuación de "al menos dos artistas de proyección nacional" cuyo nombre se desvelará en los próximos días. La entrada al recinto ferial será gratuita, como es tradición.'
+    ]
+  },
+  {
+    id: 6,
+    cat: 'Agroindustria', catClass: 'cat-economia',
+    title: 'Azucarera de Motril bate su récord histórico de producción en la campaña 2024-25',
+    author: 'Economía', time: 'Ayer', read: '5 min de lectura',
+    imgClass: 'img-sugar',
+    keywords: ['azucarera','producción','caña','récord','campaña'],
+    body: [
+      'La Azucarera de Motril ha cerrado la campaña 2024-25 con un volumen de producción que supera el récord histórico de la fábrica, según han confirmado fuentes de la empresa. La cifra exacta se hará pública en la junta de accionistas prevista para finales de mayo.',
+      'El buen resultado se atribuye a una combinación de factores: unas condiciones climáticas favorables durante el otoño, el aumento de la superficie cultivada de caña de azúcar en la vega motrileña, y las mejoras tecnológicas introducidas en la línea de procesado en 2023.',
+      'Los agricultores cañeros de la comarca han celebrado los datos, aunque reclaman una revisión al alza del precio de compra de la materia prima para la próxima temporada, argumentando que el incremento de los costes de producción ha erosionado sus márgenes a pesar del buen año.'
+    ]
+  },
+  {
+    id: 7,
+    cat: 'Puerto', catClass: 'cat-economia',
+    title: 'El tráfico de mercancías en el puerto crece un 12% en el primer trimestre',
+    author: 'Puerto', time: 'Hace 2 días', read: '3 min de lectura',
+    imgClass: 'img-port',
+    keywords: ['puerto','mercancías','tráfico','crecimiento','comercio'],
+    body: [
+      'El puerto de Motril ha registrado un incremento del 12% en el tráfico de mercancías durante el primer trimestre de 2025 respecto al mismo período del año anterior, según los datos publicados por la Autoridad Portuaria del Estado.',
+      'El mayor crecimiento se ha producido en el tráfico de graneles líquidos, principalmente combustibles, y en los productos hortofrutícolas de exportación, que han encontrado en el puerto motrileño una salida competitiva hacia los mercados del norte de Europa y el Magreb.',
+      'El dato es especialmente relevante si se tiene en cuenta que el primer trimestre de 2024 ya fue el mejor de la historia del puerto en ese período, lo que convierte el resultado de 2025 en un hito sin precedentes.'
+    ]
+  },
+  {
+    id: 8,
+    cat: 'Turismo', catClass: 'cat-economia',
+    title: 'La ocupación hotelera en la Costa Tropical supera el 85% en Semana Santa',
+    author: 'Turismo', time: 'Hace 3 días', read: '4 min de lectura',
+    imgClass: 'img-beach',
+    keywords: ['turismo','hotel','ocupación','semana santa','costa tropical'],
+    body: [
+      'Los hoteles de la Costa Tropical de Granada registraron una ocupación media del 85,4% durante la Semana Santa de 2025, un dato que supera en casi cinco puntos el registrado el año anterior y que consolida la comarca como uno de los destinos turísticos de interior más dinámicos de Andalucía.',
+      'Motril lideró los datos con una ocupación del 88%, seguida de Almuñécar con un 87% y Salobreña con un 82%. El número de turistas procedentes del extranjero creció un 18% respecto a 2024, con una presencia significativa de viajeros alemanes, británicos y escandinavos.',
+      'Los empresarios turísticos muestran optimismo de cara al verano, aunque advierten de la necesidad de ampliar la oferta de actividades de ocio y mejorar las conexiones de transporte público para consolidar el crecimiento.'
+    ]
+  },
+  {
+    id: 9,
+    cat: 'Agricultura', catClass: 'cat-economia',
+    title: 'Los productores de chirimoya piden mayor apoyo institucional ante la caída de precios',
+    author: 'Agricultura', time: 'Hace 4 días', read: '4 min de lectura',
+    imgClass: 'img-sugar2',
+    keywords: ['chirimoya','agricultura','precios','productores','apoyo'],
+    body: [
+      'La asociación de productores de chirimoya de la Costa Tropical ha trasladado al Ayuntamiento de Motril y a la Consejería de Agricultura de la Junta de Andalucía su preocupación por la caída de los precios en origen que está afectando a la rentabilidad del sector.',
+      'Según los datos del sector, el precio medio de la chirimoya en origen ha descendido un 15% en los últimos dos años, mientras que los costes de producción han aumentado por el encarecimiento de la energía y los insumos agrícolas.',
+      'Los productores reclaman un programa de promoción en mercados exteriores, especialmente en el norte de Europa y los países árabes, así como ayudas para la reconversión y modernización de las explotaciones. La chirimoya de la Costa Tropical cuenta con Denominación de Origen Protegida desde 1997.'
+    ]
+  },
+  {
+    id: 10,
+    cat: 'Mar y Costa', catClass: 'cat-mar',
+    title: 'Los pescadores artesanales de Motril piden medidas ante la reducción de las capturas de sardina',
+    author: 'Mar y Costa', time: 'Ayer', read: '5 min de lectura',
+    imgClass: 'img-fishing',
+    keywords: ['pesca','sardina','pescadores','capturas','mar','cofradía'],
+    body: [
+      'La Cofradía de Pescadores de Motril ha alertado de una caída significativa en las capturas de sardina en el litoral de la Costa Tropical durante los últimos meses, y ha solicitado a la Junta de Andalucía un estudio sobre las causas y posibles medidas de compensación para los afectados.',
+      'Según el patrón mayor de la cofradía, las capturas de sardina han descendido un 30% respecto a la media de los últimos cinco años. Los pescadores apuntan al calentamiento de las aguas del Mediterráneo como uno de los factores que está modificando los patrones de migración de la especie.',
+      'La situación se suma a las dificultades estructurales que ya venía atravesando el sector de la pesca artesanal en la comarca, con una flota envejecida y dificultades para el relevo generacional. La cofradía pide también la creación de un fondo específico para la modernización de los barcos.'
+    ]
+  }
+];
+
+// ── HAMBURGER ──────────────────────────────────────────────────
+const hamburger = document.getElementById('hamburger');
+const mainNav   = document.getElementById('mainNav');
+
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('open');
+  mainNav.classList.toggle('open');
+});
+
+// Close nav on link click (mobile)
+mainNav.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => {
+    hamburger.classList.remove('open');
+    mainNav.classList.remove('open');
+  });
+});
+
+// ── SEARCH ────────────────────────────────────────────────────
+const searchToggle  = document.getElementById('searchToggle');
+const searchBar     = document.getElementById('searchBar');
+const searchInput   = document.getElementById('searchInput');
+const searchResults = document.getElementById('searchResults');
+
+searchToggle.addEventListener('click', () => {
+  searchBar.classList.toggle('open');
+  if (searchBar.classList.contains('open')) {
+    searchInput.focus();
+  } else {
+    searchResults.classList.remove('open');
+    searchInput.value = '';
+  }
+});
+
+searchInput.addEventListener('input', () => {
+  if (searchInput.value.length > 1) runSearch();
+  else searchResults.classList.remove('open');
+});
+
+searchInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter') runSearch();
+  if (e.key === 'Escape') {
+    searchBar.classList.remove('open');
+    searchResults.classList.remove('open');
+  }
+});
+
+function runSearch() {
+  const q = searchInput.value.trim().toLowerCase();
+  if (!q) return;
+
+  const matches = articles.filter(a =>
+    a.title.toLowerCase().includes(q) ||
+    a.cat.toLowerCase().includes(q) ||
+    a.keywords.some(k => k.includes(q)) ||
+    a.body.some(p => p.toLowerCase().includes(q))
+  );
+
+  if (matches.length === 0) {
+    searchResults.innerHTML = `<div class="search-no-results">No se encontraron resultados para "<strong>${q}</strong>"</div>`;
+  } else {
+    searchResults.innerHTML = matches.map(a => `
+      <div class="search-result-item" onclick="openArticle(${a.id})">
+        <div class="sri-cat">${a.cat}</div>
+        <div class="sri-title">${highlight(a.title, q)}</div>
+      </div>
+    `).join('');
+  }
+  searchResults.classList.add('open');
+}
+
+function highlight(text, q) {
+  const re = new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi');
+  return text.replace(re, '<mark>$1</mark>');
+}
+
+// Close search when clicking outside
+document.addEventListener('click', e => {
+  if (!e.target.closest('header')) {
+    searchResults.classList.remove('open');
+  }
+});
+
+// ── ARTICLE MODAL ─────────────────────────────────────────────
+const overlay    = document.getElementById('modalOverlay');
+const modalClose = document.getElementById('modalClose');
+
+function openArticle(id) {
+  const a = articles.find(x => x.id === id);
+  if (!a) return;
+
+  document.getElementById('modalCat').textContent      = a.cat;
+  document.getElementById('modalTitle').textContent    = a.title;
+  document.getElementById('modalAuthor').textContent   = a.author;
+  document.getElementById('modalTime').textContent     = a.time;
+  document.getElementById('modalRead').textContent     = a.read;
+  document.getElementById('modalImg').className        = 'modal-img ' + a.imgClass;
+  document.getElementById('modalContent').innerHTML    = a.body.map(p => `<p>${p}</p>`).join('');
+
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  // Store current title for share
+  overlay.dataset.title = a.title;
+}
+
+function closeModal() {
+  overlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+modalClose.addEventListener('click', closeModal);
+overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ── SHARE ─────────────────────────────────────────────────────
+function shareArticle(platform) {
+  const title = overlay.dataset.title || document.title;
+  const url   = window.location.href;
+  if (platform === 'twitter') {
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`,'_blank');
+  } else if (platform === 'whatsapp') {
+    window.open(`https://wa.me/?text=${encodeURIComponent(title + ' ' + url)}`,'_blank');
+  } else if (platform === 'copy') {
+    navigator.clipboard.writeText(url).then(() => {
+      const btn = event.target;
+      btn.textContent = '¡Copiado!';
+      setTimeout(() => { btn.textContent = 'Copiar enlace'; }, 2000);
+    });
+  }
+}
+
+// ── BIND CARDS TO ARTICLES ────────────────────────────────────
+// Hero main
+document.querySelector('.hero-main').addEventListener('click', () => openArticle(1));
+document.querySelector('.hero-main').style.cursor = 'pointer';
+
+// Sidebar items
+const sidebarItems = document.querySelectorAll('.sidebar-item');
+const sidebarIds   = [2, 6, 7, 8, 9, 10];
+sidebarItems.forEach((el, i) => {
+  el.addEventListener('click', () => openArticle(sidebarIds[i]));
+});
+
+// Article cards (grid-3 and grid-4)
+const cards    = document.querySelectorAll('.article-card');
+const cardIds  = [3, 4, 5, 6, 7, 8, 9];
+cards.forEach((el, i) => {
+  if (cardIds[i]) el.addEventListener('click', () => openArticle(cardIds[i]));
+});
+
+// Feature banner
+document.querySelector('.feature-banner').addEventListener('click', () => openArticle(10));
+document.querySelector('.feature-banner').style.cursor = 'pointer';
+
+// Nav active state on click
+document.querySelectorAll('nav a').forEach(a => {
+  a.addEventListener('click', function(e) {
+    e.preventDefault();
+    document.querySelectorAll('nav a').forEach(x => x.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
